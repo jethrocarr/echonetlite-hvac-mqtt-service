@@ -6,10 +6,11 @@ Japan. This application listens to your local network for ECHONET Lite HVAC
 service. It also subscribes to MQTT to listen for commands back to perform
 actions such as changing temperature or changing modes (heat vs cool vs off).
 
-It's primary design is to facilitate integration between Mitsubishi MAC-559IF-E
+It's primary design is to facilitate integration between Mitsubishi MAC-568IF-E
 Wifi Controllers and the popular home automation software [Home Assistant](https://www.home-assistant.io/),
-but it's not exclusive to that platform and could be used by anything that can
-read and write to MQTT and should support any other ECHONET Lite HVAC units.
+but it's not exclusive to that platform or hardware and could be used by
+anything that can read and write to MQTT and any HVAC hardware that supports
+the ECHONET Lite protocol.
 
 
 # Tested Hardware
