@@ -149,7 +149,7 @@ need. So it made more sense to interact with Home Assistant using MQTT instead.
 
 If someone wants to build a native component, please do! Use this code and it's
 dependent node module as a reference and also take a look at
-ttps://github.com/keiichishima/echonetlite for a POC ECHONET Lite library in
+https://github.com/keiichishima/echonetlite for a POC ECHONET Lite library in
 Python which might be a good place to start.
 
 
