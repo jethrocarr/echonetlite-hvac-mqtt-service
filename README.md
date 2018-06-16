@@ -83,7 +83,7 @@ static lease to your devices so that their IP address does not change.
 # Using with Home Assistant
 
 The following is an example of configuring the
-(https://www.home-assistant.io/components/climate.mqtt/)[MQTT HVAC component]
+[MQTT HVAC component](https://www.home-assistant.io/components/climate.mqtt/)
 in Home Assistant to work with the MQTT structure created by this application:
 
     climate:
