@@ -1,5 +1,5 @@
 /*
- * ECHONET Lite AC MQTT Service
+ * ECHONET Lite HVAC MQTT Service
  *
  * This service syncs information between ECHONET Lite HVAC devices and MQTT
  * for integration with home automation systems.

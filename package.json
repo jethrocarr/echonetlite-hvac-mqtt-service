@@ -1,5 +1,5 @@
 {
-  "name": "echonetlite-ac-mqtt",
+  "name": "echonetlite-hvac-mqtt",
   "version": "0.0.1",
   "description": "A small application that syncs state between MQTT and ECHONET Lite HVAC systems",
   "private": true,

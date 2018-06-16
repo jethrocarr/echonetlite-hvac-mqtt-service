@@ -1,8 +1,8 @@
-# ECHONET Lite AC MQTT service
+# ECHONET Lite HVAC MQTT service
 
 ECHONET Lite is a protocol used by some smart home appliances originating in
-Japan. This application listens to your local network for ECHONET Lite air
-conditioning (heat pump) appliances and then feeds their status to an MQTT
+Japan. This application listens to your local network for ECHONET Lite HVAC
+(heat pump / air conditioning) appliances and then feeds their status to a MQTT
 service. It also subscribes to MQTT to listen for commands back to perform
 actions such as changing temperature or changing modes (heat vs cool vs off).
 
