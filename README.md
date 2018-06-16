@@ -14,8 +14,7 @@ home automation application.
 
 * Mitsubishi MAC-568IF-E adaptors (popular in NZ/AU).
   * Note that you must enable the ECHONET Lite protocol via the settings
-    interface in the official WiFi
-    control application.
+    interface in the official WiFi control application before it will work.
   * Supported models:
     * Mitsubishi PEAD-RP140JAA (Ducted Heat Pump)
 
@@ -68,7 +67,7 @@ To talk to Home Assistant, this application must be able to connect on TCP port
 1883 to the MQTT server being used. If using the default embedded Home Assistant
 MQTT server, the configuration string will be:
 
-   mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883
+    mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883
 
 Set the appropriate password for `API_PASSWORD_HERE` and if your setup is not
 all local, make sure to set the appropiate hostname/IP in place of `localhost`
