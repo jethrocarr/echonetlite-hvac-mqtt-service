@@ -6,8 +6,10 @@ conditioning (heat pump) appliances and then feeds their status to an MQTT
 service. It also subscribes to MQTT to listen for commands back to perform
 actions such as changing temperature or changing modes (heat vs cool vs off).
 
-It's primary design is to facilitate integration with the popular Home Assistant
-home automation application.
+It's primary design is to facilitate integration between Mitsubishi MAC-559IF-E
+Wifi Controllers and the popular home automation software [Home Assistant](https://www.home-assistant.io/),
+but it's not exclusive to that platform and could be used by anything that can
+read and write to MQTT and should support any other ECHONET Lite HVAC units.
 
 
 # Tested Hardware
@@ -29,8 +31,24 @@ there to know if their device is supported.
 
 # Incompatible Hardware
 
-* Mitsubishi MAC-559IF-E & MAC-558IF-E - only MAC-568IF-E has the additional
-  support for the ECHONET Lite protocol (as of time of writing).
+The following is a list of hardware that seems like it should work with this
+application, but for various reasons don't:
+
+* Mitsubishi MAC-559IF-E & MAC-558IF-E
+   * Only MAC-568IF-E (and presumably newer?) has the additional support for the
+    ECHONET Lite protocol, older models are out of luck unless Mitsubishi
+    suddenly decide to backport it to these older gens.
+   * There are some POCs for doing control of any of the Mitsubishi wifi control
+     devices using the upstream cloud API (Melview) which would work with these
+     older units, but they will need some polish and Melview seems to have a
+     habit of blocking IPs that try to poll too often. Take a look at the
+     following POCs for some reference material:
+      * https://github.com/NovaGL/diy-melview
+      * https://github.com/lennyby93/node-mmcontrol
+      * https://github.com/delwinbest/homeassistant_mitsubishi_hvac
+   * These older units do feature an HTTP interface that people have been trying
+     to figure out that could offer a way of integrating locally, take a look at
+     https://github.com/NovaGL/diy-melview/issues/2 for comments there.
 
 
 # Configuration & Operation
@@ -60,16 +78,23 @@ static lease to your devices so that their IP address does not change.
 
 # Using with Home Assistant
 
-The primary goal of this project was to control my MAC-568IF-E with Home
-Assistant. Ideally this would be a native component, but as the Node library was
-(at the time of developing it) the only decent ECHONET Lite library I could find
-in English, writing a Python version was too large a task for my own personal
-need. So it made more sense to interact with Home Assistant using MQTT instead.
+The following is an example of configuring the
+(https://www.home-assistant.io/components/climate.mqtt/)[MQTT HVAC component]
+in Home Assistant to work with the MQTT structure created by this application:
 
-The following is an example of configuring the MQTT HVAC component in Home
-Assistant to work with the MQTT structure created by this application:
+    climate:
+      - platform: mqtt
+        name: Heatpump
+        power_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_power
+        mode_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_mode
+        mode_state_topic: /echonetlite/DEVICE_NAME_HERE/hvac_state_mode
+        fan_mode_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_fanmode
+        fan_mode_state_topic: /echonetlite/DEVICE_NAME_HERE/hvac_state_fanmode
+        current_temperature_topic: /echonetlite/DEVICE_NAME_HERE/hvac_state_room_temperature
+        temperature_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_target_temperature
+        temperature_state_topic: /echonetlite/DEVICE_NAME_HERE/hvac_state_target_temperature
 
-TODO: Example config here.
+You can confirm the topic names by observing this application's runtime output.
 
 To talk to Home Assistant, this application must be able to connect on TCP port
 1883 to the MQTT server being used. If using the default embedded Home Assistant
@@ -77,9 +102,19 @@ MQTT server, the configuration string will be:
 
     export MQTT_URL='mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883'
 
-Set the appropriate password for `API_PASSWORD_HERE` and if your setup is not
-all local, make sure to set the appropriate hostname/IP in place of `localhost`
-and ensure that TCP port 1883 is open and reachable.
+Set the appropriate password for `API_PASSWORD_HERE` (generally the same as the
+web interface) and if your setup is not all running locally on the same host,
+make sure to set the appropriate hostname/IP in place of `localhost` and ensure
+that TCP port 1883 is open and reachable.
+
+
+# Using with Apple HomeKit
+
+It's possible to expose the HVAC unit to HomeKit by using Home Assisant with
+the additional HomeKit component enabled. HomeKit's support does not have
+feature parity with ECHONET Lite protocol (currently) so certain features such
+as fan speed control and "fan only" mode are not supported. The core functions
+of on/off, heat, cool and showing temperature works fine.
 
 
 # All configuration options
@@ -95,7 +130,23 @@ and ensure that TCP port 1883 is open and reachable.
 
 If you see `Reconnecting to MQTT` constantly and aren't getting anything in
 MQTT, it means your config is probably wrong and the app is unable to establish
-a connection.
+a connection. For some reason the mqtt node library doesn't seem particularly
+communicative about errors and why they're happening, so any incorrect config
+just results in repeat reconnects without reasons being stated.
+
+
+# Why not a native Python component for Home Assistant?
+
+The primary goal of this project was to control my MAC-568IF-E with Home
+Assistant. Ideally this would be a native component, but as the Node library was
+(at the time of developing it) the only decent ECHONET Lite library I could find
+in English, writing a Python version was too large a task for my own personal
+need. So it made more sense to interact with Home Assistant using MQTT instead.
+
+If someone wants to build a native component, please do! Use this code and it's
+dependent node module as a reference and also take a look at
+ttps://github.com/keiichishima/echonetlite for a POC ECHONET Lite library in
+Python which might be a good place to start.
 
 
 # Thanks
@@ -104,9 +155,15 @@ Big thanks to Futomi Hatano for open sourcing a high quality and extremely well
 documented ECHONET Lite library that this application relies on for doing all
 the hard work: https://github.com/futomi/node-echonet-lite
 
-This library includes
-(https://github.com/futomi/node-echonet-lite/blob/master/EDT-01.md)[some
-extremely good documentation that summaries the spec for HVAC systems].
+This library includes [some extremely good documentation that summaries the spec
+for HVAC systems](https://github.com/futomi/node-echonet-lite/blob/master/EDT-01.md).
+
+
+# Bugs, PRS, Contributions
+
+Please submit any bugs/issues/questions on the Github issue tracker only. PRs
+and other code contributions are always welcome, especially if they fix a bug
+you've found ;-)
 
 
 # License
