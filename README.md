@@ -12,14 +12,16 @@ home automation application.
 
 # Tested Hardware
 
-* Mitsubishi MAC-568IF-E adaptors (popular in NZ/AU). Note that you must enable
-  the ECHONET Lite protocol via the settings interface in the official WiFi
-  control application. Supports:
-   * Mitsubishi PEAD-RP140JAA (Ducted Heat Pump)
+* Mitsubishi MAC-568IF-E adaptors (popular in NZ/AU).
+  * Note that you must enable the ECHONET Lite protocol via the settings
+    interface in the official WiFi
+    control application.
+  * Supported models:
+    * Mitsubishi PEAD-RP140JAA (Ducted Heat Pump)
 
 Just because a model isn't listed, doesn't mean it won't work. In theory any
-model that supports ECHONET Lite properly should work, however select features
-might not have corresponding logic in this application.
+model that supports ECHONET Lite properly should work (yay standards!), however
+select features might not have corresponding logic in this application.
 
 PRs are most welcome, even if it's simply to add a particular model to this
 tested hardware list with 0 code changes needed. It's helpful for others out
@@ -29,7 +31,7 @@ there to know if their device is supported.
 # Incompatible Hardware
 
 * Mitsubishi MAC-559IF-E & MAC-558IF-E - only MAC-568IF-E has the additional
-  support for the ECHONET Lite protocol.
+  support for the ECHONET Lite protocol (as of time of writing).
 
 
 # Configuration & Operation
