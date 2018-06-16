@@ -17,6 +17,9 @@ read and write to MQTT and should support any other ECHONET Lite HVAC units.
 * Mitsubishi MAC-568IF-E adaptors (popular in NZ/AU).
   * Note that you must enable the ECHONET Lite protocol via the settings
     interface in the official WiFi control application before it will work.
+  * At this time, the optional Lossnay ventilation unit does not appear to be
+    exposed or be controllable via this protocol (it's also not exposed to the
+    official wifi app either).
   * Supported models:
     * Mitsubishi PEAD-RP140JAA (Ducted Heat Pump)
 
