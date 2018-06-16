@@ -1,0 +1,13 @@
+{
+  "name": "echonetlite-ac-mqtt",
+  "version": "0.0.1",
+  "description": "A small application that syncs state between MQTT and ECHONET Lite HVAC systems",
+  "private": true,
+  "scripts": {
+    "start": "node test.js"
+  },
+  "dependencies": {
+    "node-echonet-lite": "^0.2.2",
+    "mqtt": "^2.18.1"
+  }
+}
