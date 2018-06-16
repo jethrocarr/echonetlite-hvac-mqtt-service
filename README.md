@@ -49,6 +49,14 @@ listens to the network for device discovery.
 
 TODO: Config & Launch Example
 
+If anything goes wrong in the app, it'll probably just crash. You will want to
+use an init system that can automatically re-start the application such as
+systemd or utilize the Docker `--restart always` argument.
+
+The end result is data being published to MQTT. We use the device IP address as
+it's unique name, so it is recommended to setup your DHCP server to grant a
+static lease to your devices so that their IP address does not change.
+
 
 # Using with Home Assistant
 
@@ -67,11 +75,27 @@ To talk to Home Assistant, this application must be able to connect on TCP port
 1883 to the MQTT server being used. If using the default embedded Home Assistant
 MQTT server, the configuration string will be:
 
-    mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883
+    export MQTT_URL='mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883'
 
 Set the appropriate password for `API_PASSWORD_HERE` and if your setup is not
-all local, make sure to set the appropiate hostname/IP in place of `localhost`
+all local, make sure to set the appropriate hostname/IP in place of `localhost`
 and ensure that TCP port 1883 is open and reachable.
+
+
+# All configuration options
+
+| Environmental  | Example                                               | Details                                              |
+|----------------| ------------------------------------------------------|------------------------------------------------------|
+| MQTT_URL       | mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883 | MQTT server & creds to use.                          |
+| DISCOVERY_TIME | 10                                                    | How long to search for devices on the LAN at startup |
+| POLL_FREQUENCY | 30                                                    | How often to ask devices for current status          |
+
+
+# Troubleshooting
+
+If you see `Reconnecting to MQTT` constantly and aren't getting anything in
+MQTT, it means your config is probably wrong and the app is unable to establish
+a connection.
 
 
 # Thanks
