@@ -353,7 +353,31 @@ function enlSetProperty(address, eoj, epc, value) {
           return; // Dunno why, but resolve() on it own doesn't terminate execution.
         }
 
-        var edt = { 'level': epcFanModes.indexOf(value) };
+        // What we should have:
+        // var edt = { 'level': epcFanModes.indexOf(value) };
+
+        // What we actually have:
+        /* We use a cut down set of fanmodes for mapping here to work
+         * specifically with Mitsubishi's wierd fan levels. This might not port
+         * to other vendors, so if it annoys you, please send a PR with a
+         * solution that works for multiples... I fear we may need to implement
+         * a "traits" mode or something for different brands.
+        */
+        switch (value.toLowerCase()) {
+          case 'low':
+            var edt = { 'level': 2 };
+            break;
+          case 'medium':
+            var edt = { 'level': 3 }; 
+            break;
+          case 'high':
+            var edt = { 'level': 5 };
+            break;
+          default:
+            var edt = { 'level': 2 }; // default to low
+            break;
+        }
+
         break;
     }
 
