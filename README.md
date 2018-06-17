@@ -102,6 +102,11 @@ The end result is data being published to MQTT. We use the device IP address as
 it's unique name, so it is recommended to setup your DHCP server to grant a
 static lease to your devices so that their IP address does not change.
 
+The application will start listening on `UDP` port `3610` - please make sure you
+open up your firewall to permit inbound requests, eg:
+
+    iptables -I INPUT -p udp --dport 3610 -j ACCEPT
+
 
 # Using with Home Assistant
 
@@ -160,6 +165,10 @@ MQTT, it means your config is probably wrong and the app is unable to establish
 a connection. For some reason the mqtt node library doesn't seem particularly
 communicative about errors and why they're happening, so any incorrect config
 just results in repeat reconnects without reasons being stated.
+
+If you are not able to discover any devices, check that you are not blocking
+traffic into your server on `UDP` port `3610` - as the discovery process is a
+listener, it's important it's able to actually receive traffic from the LAN.
 
 
 # Why not a native Python component for Home Assistant?
