@@ -148,6 +148,11 @@ feature parity with ECHONET Lite protocol (currently) so certain features such
 as fan speed control and "fan only" mode are not supported. The core functions
 of on/off, heat, cool and showing temperature works fine.
 
+Note: There is no speed for exposing/controlling fan speed with Homekit via
+Home Assistant currently - refer to the ticket explaining the issues and
+progress on this at: https://github.com/home-assistant/architecture/issues/27
+
+
 
 # All configuration options
 
