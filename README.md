@@ -66,8 +66,8 @@ versions.
 Or pull from my repository, I have two pre-build images - one for x86_64 and one
 for 32-bit ARM for those running devices such as the Raspberry Pi.
 
-    docker pull
-    docker pull jethrocarr/echonetlite-hvac-mqtt:latest-arm
+    docker pull jethrocarr/echonetlite-hvac-mqtt:latest      # x86_64
+    docker pull jethrocarr/echonetlite-hvac-mqtt:latest-arm  # arm
 
 Configuration is minimal - you must set an MQTT URL that the application uses to
 send all updates and subscribe for changes.
