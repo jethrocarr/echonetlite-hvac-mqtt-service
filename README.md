@@ -61,7 +61,13 @@ This application includes a Dockerfile and the easiest way to run it is to build
 and execute inside Docker due to the complexities of getting the right Node
 versions.
 
-     docker build -t echonetlite-hvac-mqtt:latest .
+     docker build -t jethrocarr/echonetlite-hvac-mqtt:latest .
+
+Or pull from my repository, I have two pre-build images - one for x86_64 and one
+for 32-bit ARM for those running devices such as the Raspberry Pi.
+
+    docker pull
+    docker pull jethrocarr/echonetlite-hvac-mqtt:latest-arm
 
 Configuration is minimal - you must set an MQTT URL that the application uses to
 send all updates and subscribe for changes.
@@ -69,14 +75,24 @@ send all updates and subscribe for changes.
 Discovery of the ECHONET Lite devices is automated - at launch the application
 listens to the network for device discovery.
 
-     # Put the ENVs into a private file to avoid exposing them on `ps aux`
+Simplest possible invocation:
+
+    docker run --rm --network host \
+    -e MQTT_URL=mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883 \
+    jethrocarr/echonetlite-hvac-mqtt:latest
+
+Or to be more secure, you should put the ENVs into a private file to avoid
+exposing them on `ps aux` to other users/processes on the server running the
+container:
+
      cat > /etc/echonetlite-hvac-mqtt.envs << EOF
      MQTT_URL=mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883
      EOF
      chmod 600 /etc/echonetlite-hvac-mqtt.envs
 
-     # Run the container
-     docker run -t --rm --network host --env-file /etc/echonetlite-hvac-mqtt.envs echonetlite-hvac-mqtt:latest
+     docker run --rm --network host \
+     --env-file /etc/echonetlite-hvac-mqtt.envs \
+     jethrocarr/echonetlite-hvac-mqtt:latest
 
 If anything goes wrong in the app, it'll probably just crash. You will want to
 use an init system that can automatically re-start the application such as
