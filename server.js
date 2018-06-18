@@ -9,6 +9,20 @@
  *
  */
 
+// Setup the watchdog
+var Watchpuppy = require('watchpuppy');
+
+// Time out is set to POLL_FREQUENCY + 60 seconds.
+var watchdogTimer = process.env.WATCHDOG_TIMER || 60;
+if (process.env.POLL_FREQUENCY) {
+  watchdogTimer = parseInt(process.env.POLL_FREQUENCY) + 1
+}
+
+// If timeout occurs, terminate.
+var watchdog = new Watchpuppy({checkInterval: watchdogTimer * 1000, minPing: 1, stopOnError: true}, (err) => {
+  showErrorExit("Terminated due to watchdog timeout (no activity for " + watchdogTimer + " seconds)");
+});
+
 
 // Establish the MQTT connection.
 if (!process.env.MQTT_URL) {
@@ -232,6 +246,7 @@ async function subscribeDevice(deviceName, deviceAttributes) {
 // Poll devices for current status
 async function pollDevice(deviceName, deviceAttributes) {
   console.log("Polling device: "+ deviceName)
+  watchdog.ping(); // Safety - if we hang on polling, the script will get terminated.
 
   for (var index in mqttTopics) {
 
