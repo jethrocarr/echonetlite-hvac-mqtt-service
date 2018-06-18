@@ -368,7 +368,7 @@ function enlSetProperty(address, eoj, epc, value) {
             var edt = { 'level': 2 };
             break;
           case 'medium':
-            var edt = { 'level': 3 }; 
+            var edt = { 'level': 3 };
             break;
           case 'high':
             var edt = { 'level': 5 };
