@@ -168,13 +168,13 @@ progress on this at: https://github.com/home-assistant/architecture/issues/27
 
 # All configuration options
 
-| Environmental  | Example                                               | Details                                              |
-|----------------| ------------------------------------------------------|------------------------------------------------------|
-| MQTT_URL       | mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883 | MQTT server & creds to use.                          |
-| DISCOVERY_TIME | 10                                                    | How long to search for devices on the LAN at startup |
-| POLL_FREQUENCY | 30                                                    | How often to ask devices for current status          |
-| WATCHDOG_TIMER | 60                                                    | Timer for detecting hung connections & restarting    |
-
+| Environmental        | Example                                               | Details                                                                                            |
+|----------------------| ------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| MQTT_URL             | mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883 | MQTT server & creds to use.                                                                        |
+| DISCOVERY_TIME       | 10                                                    | How long to search for devices on the LAN at startup                                               |
+| POLL_FREQUENCY       | 30                                                    | How often to ask devices for current status                                                        |
+| WATCHDOG_TIMER       | 60                                                    | Timer for detecting hung connections & restarting                                                  |
+| NUM_EXPECTED_DEVICES | 2                                                     | Will cause early termination if the number of devices discovered doesn't match the expected number |
 
 # Troubleshooting
 
