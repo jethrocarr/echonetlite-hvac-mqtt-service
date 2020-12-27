@@ -147,6 +147,13 @@ function loopDevices() {
       // discovered devices in parallel.
       console.log("Running ECHONET Lite discovery (" + discoveryTime + " seconds)");
 
+      // Number of expected devices
+      var numExpectedDevices = process.env.NUM_EXPECTED_DEVICES || 1;
+      if (numExpectedDevices <= 0) {
+        numExpectedDevices = 1;
+      }
+      console.log("Expected Devices: " + numExpectedDevices);
+
       discoverDevices(devices);
 
       setTimeout(async function() {
@@ -154,6 +161,12 @@ function loopDevices() {
 
         // Stop further discovery
         //enlClient.stopDiscovery();
+
+        // Check the number of discovered devices is what we expect
+        var numFound = Object.keys(devices).length;
+        if (numFound < numExpectedDevices) {
+          showErrorExit("Number of devices found (" + numFound + ") is less than expected (" + numExpectedDevices + ")");
+        }
 
         // Launch
         console.log("Now processing discovered devices...")
