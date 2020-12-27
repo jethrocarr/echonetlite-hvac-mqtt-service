@@ -116,6 +116,7 @@ in Home Assistant to work with the MQTT structure created by this application:
 
     climate:
       - platform: mqtt
+        unique_id: "DEVICE_MAC_ADDRESS"
         name: Heatpump
         power_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_power
         mode_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_mode
@@ -125,6 +126,17 @@ in Home Assistant to work with the MQTT structure created by this application:
         current_temperature_topic: /echonetlite/DEVICE_NAME_HERE/hvac_state_room_temperature
         temperature_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_target_temperature
         temperature_state_topic: /echonetlite/DEVICE_NAME_HERE/hvac_state_target_temperature
+        #
+        # Only needed if your unit supports more than the default fan modes
+        #
+        fan_modes:
+          - "auto"
+          - "off"
+          - "quiet"
+          - "low"
+          - "medium"
+          - "high"
+          - "super high"
 
 You can confirm the topic names by observing this application's runtime output.
 

@@ -101,7 +101,18 @@ var mqttTopics = Object.keys(epcMapping); // more convinent form.
  * I fear in the future we may need device-specific logic here for
  * different vendors.
  */
-var epcFanModes = ['auto', 'low', 'low', 'medium', 'medium', 'high', 'high', 'high', 'high'];
+/*
+    0: auto
+    1: quiet
+    2: low
+    3: medium
+    4: ??? unknown ???
+    5: high
+    6: super_high
+    7: ??? unknown ???
+    8: ???? unknown ????
+*/
+var epcFanModes = ['auto', 'quiet', 'low', 'medium', 'medium', 'high', 'super high', 'high', 'high'];
 
 
 /* These mode descriptions are specifically chosen to suit passthrough
@@ -379,6 +390,12 @@ function enlSetProperty(address, eoj, epc, value) {
          * a "traits" mode or something for different brands.
         */
         switch (value.toLowerCase()) {
+          case 'auto':
+            var edt = { 'level': 0 };
+            break;
+          case 'quiet':
+            var edt = { 'level': 1 };
+            break;
           case 'low':
             var edt = { 'level': 2 };
             break;
@@ -387,6 +404,9 @@ function enlSetProperty(address, eoj, epc, value) {
             break;
           case 'high':
             var edt = { 'level': 5 };
+            break;
+          case 'super high':
+            var edt = { 'level': 6 };
             break;
           default:
             var edt = { 'level': 2 }; // default to low
