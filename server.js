@@ -85,11 +85,11 @@ var epcMapping = {
   'hvac_command_mode': 0xB0,
   'hvac_command_target_temperature': 0xB3,
   'hvac_command_fanmode': 0xA0,
-  'hvac_state_fanmode': 0xA0,
+  'hvac_state_power': 0x80,
+  'hvac_state_mode': 0xB0,
   'hvac_state_target_temperature': 0xB3,
   'hvac_state_room_temperature': 0xBB,
-  'hvac_state_mode': 0xB0,
-  'hvac_state_power': 0x80,
+  'hvac_state_fanmode': 0xA0,
 };
 
 var mqttTopics = Object.keys(epcMapping); // more convinent form.
@@ -284,15 +284,15 @@ async function pollDevice(deviceName, deviceAttributes) {
       console.log('Publishing ' + fullTopic + ' = ' + value.toString());
 
       // Preserve power state hack. We've avoided storing state in this app throughout
-      // but because of how HomeAssistant handles on/off power stats, we need to
+      // but because of how HomeAssistant handles on/off power states, we need to
       // know if the unit is powered or not to overwrite some of the modes that
       // we send back to Home Assistant. Otherwise we'll keep telling it that
       // it's in "heat mode" when it's off, since the unit maintains that state.
-      if (epc == 0x80) {
+      if (epc == 0x80 /* Operation Status */) {
         // Save the per-device power state
         devices[deviceName]['powerState'] = value
       }
-      if (epc == 0xB0 || epc == 0xA0) {
+      if (epc == 0xB0 /* Operation Mode */|| epc == 0xA0 /* Airflow Rate/Fan Speed/Mode */) {
         // Fan mode or operating mode EPCs
         if (devices[deviceName]['powerState'] == false) {
           // We are powered down, let's override the value we send to HomeAssistant
