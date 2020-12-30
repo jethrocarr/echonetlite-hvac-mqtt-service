@@ -85,11 +85,11 @@ var epcMapping = {
   'hvac_command_mode': 0xB0,
   'hvac_command_target_temperature': 0xB3,
   'hvac_command_fanmode': 0xA0,
-  'hvac_state_fanmode': 0xA0,
+  'hvac_state_power': 0x80,
+  'hvac_state_mode': 0xB0,
   'hvac_state_target_temperature': 0xB3,
   'hvac_state_room_temperature': 0xBB,
-  'hvac_state_mode': 0xB0,
-  'hvac_state_power': 0x80,
+  'hvac_state_fanmode': 0xA0,
 };
 
 var mqttTopics = Object.keys(epcMapping); // more convinent form.
@@ -101,7 +101,18 @@ var mqttTopics = Object.keys(epcMapping); // more convinent form.
  * I fear in the future we may need device-specific logic here for
  * different vendors.
  */
-var epcFanModes = ['auto', 'low', 'low', 'medium', 'medium', 'high', 'high', 'high', 'high'];
+/*
+    0: auto
+    1: quiet
+    2: low
+    3: medium
+    4: ??? unknown ???
+    5: high
+    6: super_high
+    7: ??? unknown ???
+    8: ???? unknown ????
+*/
+var epcFanModes = ['auto', 'quiet', 'low', 'medium', 'medium', 'high', 'super high', 'high', 'high'];
 
 
 /* These mode descriptions are specifically chosen to suit passthrough
@@ -136,6 +147,13 @@ function loopDevices() {
       // discovered devices in parallel.
       console.log("Running ECHONET Lite discovery (" + discoveryTime + " seconds)");
 
+      // Number of expected devices
+      var numExpectedDevices = process.env.NUM_EXPECTED_DEVICES || 1;
+      if (numExpectedDevices <= 0) {
+        numExpectedDevices = 1;
+      }
+      console.log("Expected Devices: " + numExpectedDevices);
+
       discoverDevices(devices);
 
       setTimeout(async function() {
@@ -143,6 +161,12 @@ function loopDevices() {
 
         // Stop further discovery
         //enlClient.stopDiscovery();
+
+        // Check the number of discovered devices is what we expect
+        var numFound = Object.keys(devices).length;
+        if (numFound < numExpectedDevices) {
+          showErrorExit("Number of devices found (" + numFound + ") is less than expected (" + numExpectedDevices + ")");
+        }
 
         // Launch
         console.log("Now processing discovered devices...")
@@ -260,15 +284,15 @@ async function pollDevice(deviceName, deviceAttributes) {
       console.log('Publishing ' + fullTopic + ' = ' + value.toString());
 
       // Preserve power state hack. We've avoided storing state in this app throughout
-      // but because of how HomeAssistant handles on/off power stats, we need to
+      // but because of how HomeAssistant handles on/off power states, we need to
       // know if the unit is powered or not to overwrite some of the modes that
       // we send back to Home Assistant. Otherwise we'll keep telling it that
       // it's in "heat mode" when it's off, since the unit maintains that state.
-      if (epc == 0x80) {
+      if (epc == 0x80 /* Operation Status */) {
         // Save the per-device power state
         devices[deviceName]['powerState'] = value
       }
-      if (epc == 0xB0 || epc == 0xA0) {
+      if (epc == 0xB0 /* Operation Mode */|| epc == 0xA0 /* Airflow Rate/Fan Speed/Mode */) {
         // Fan mode or operating mode EPCs
         if (devices[deviceName]['powerState'] == false) {
           // We are powered down, let's override the value we send to HomeAssistant
@@ -379,6 +403,12 @@ function enlSetProperty(address, eoj, epc, value) {
          * a "traits" mode or something for different brands.
         */
         switch (value.toLowerCase()) {
+          case 'auto':
+            var edt = { 'level': 0 };
+            break;
+          case 'quiet':
+            var edt = { 'level': 1 };
+            break;
           case 'low':
             var edt = { 'level': 2 };
             break;
@@ -387,6 +417,9 @@ function enlSetProperty(address, eoj, epc, value) {
             break;
           case 'high':
             var edt = { 'level': 5 };
+            break;
+          case 'super high':
+            var edt = { 'level': 6 };
             break;
           default:
             var edt = { 'level': 2 }; // default to low

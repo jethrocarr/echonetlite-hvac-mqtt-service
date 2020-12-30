@@ -116,6 +116,7 @@ in Home Assistant to work with the MQTT structure created by this application:
 
     climate:
       - platform: mqtt
+        unique_id: "DEVICE_MAC_ADDRESS"
         name: Heatpump
         power_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_power
         mode_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_mode
@@ -125,6 +126,17 @@ in Home Assistant to work with the MQTT structure created by this application:
         current_temperature_topic: /echonetlite/DEVICE_NAME_HERE/hvac_state_room_temperature
         temperature_command_topic: /echonetlite/DEVICE_NAME_HERE/hvac_command_target_temperature
         temperature_state_topic: /echonetlite/DEVICE_NAME_HERE/hvac_state_target_temperature
+        #
+        # Only needed if your unit supports more than the default fan modes
+        #
+        fan_modes:
+          - "auto"
+          - "off"
+          - "quiet"
+          - "low"
+          - "medium"
+          - "high"
+          - "super high"
 
 You can confirm the topic names by observing this application's runtime output.
 
@@ -156,13 +168,13 @@ progress on this at: https://github.com/home-assistant/architecture/issues/27
 
 # All configuration options
 
-| Environmental  | Example                                               | Details                                              |
-|----------------| ------------------------------------------------------|------------------------------------------------------|
-| MQTT_URL       | mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883 | MQTT server & creds to use.                          |
-| DISCOVERY_TIME | 10                                                    | How long to search for devices on the LAN at startup |
-| POLL_FREQUENCY | 30                                                    | How often to ask devices for current status          |
-| WATCHDOG_TIMER | 60                                                    | Timer for detecting hung connections & restarting    |
-
+| Environmental        | Example                                               | Details                                                                                            |
+|----------------------| ------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| MQTT_URL             | mqtt://homeassistant:API_PASSWORD_HERE@localhost:1883 | MQTT server & creds to use.                                                                        |
+| DISCOVERY_TIME       | 10                                                    | How long to search for devices on the LAN at startup                                               |
+| POLL_FREQUENCY       | 30                                                    | How often to ask devices for current status                                                        |
+| WATCHDOG_TIMER       | 60                                                    | Timer for detecting hung connections & restarting                                                  |
+| NUM_EXPECTED_DEVICES | 2                                                     | Will cause early termination if the number of devices discovered doesn't match the expected number |
 
 # Troubleshooting
 
