@@ -1,3 +1,9 @@
+# DEPRECATED
+
+Check out https://github.com/scottyphillips/echonetlite_homeassistant for a better
+version of this solution for Home Assistant.
+
+
 # ECHONET Lite HVAC MQTT service
 
 ECHONET Lite is a protocol used by some smart home appliances originating in
